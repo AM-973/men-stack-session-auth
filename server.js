@@ -7,6 +7,7 @@ const mongoose = require('mongoose')
 const authController = require("./controllers/auth.controller.js")
 
 
+
 // DATABASE CONNECTION
 
 mongoose.connect(process.env.MONGODB_URI)
