@@ -4,7 +4,7 @@ const app = express()
 const methodOverride = require('method-override')
 const morgan = require('morgan')
 const mongoose = require('mongoose')
-const authController = require("./controllers/auth.js")
+const authController = require("./controllers/auth.controller.js")
 
 
 // DATABASE CONNECTION
