@@ -19,6 +19,7 @@ router.get("/sign-up", (req, res) => {
 router.post('/sign-up', async(req,res)=>{
   //get the data from the form(req,body)
   //check if someone already exists
+  //req.body = form data
   const userInDatabase = await User.findOne({ username: req.body.username })
   if(userInDatabase){
     return res.send('Username already taken.')
@@ -30,9 +31,15 @@ router.post('/sign-up', async(req,res)=>{
   // check for the password complexity (LEVELUP)
   // hash the password
   const hashedPassword = bcrypt.hashSync(req.body.password, 10)
-  console.log(hashedPassword)
   req.body.password = hashedPassword
   const newUser = await User.create(req.body)
+  req.session.user = {
+  username: userInDatabase.username,
+  _id: newUser._id,
+  }
+  req.session.save(()=>{
+    res.redirect('/')
+  })
   res.send(`Thanks for signing up ${newUser.username}`)
 })
 

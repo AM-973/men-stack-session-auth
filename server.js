@@ -6,10 +6,10 @@ const morgan = require('morgan')
 const mongoose = require('mongoose')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
-const authController = require("./controllers/auth.controller.js")
-
+const authController = require("./controllers/auth.controller")
+const isSignedIn = require('./middleware/is-signed-in')
 // styles?
-app.use(express.static(__dirname));
+app.use(express.static(__dirname))
 // styles
 
 // DATABASE CONNECTION
@@ -39,8 +39,12 @@ app.get("/", async (req, res) => {
 })
 
 
+
 //ROUTES
 app.use('/auth', authController)
+app.get('/vip-lounge',isSignedIn,(req,res)=>{
+    res.send(`Welcome ${req.session.username}`)
+})
 
 
 const port = process.env.PORT ? process.env.PORT : "3000"
