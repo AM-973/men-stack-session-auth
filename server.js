@@ -4,9 +4,13 @@ const app = express()
 const methodOverride = require('method-override')
 const morgan = require('morgan')
 const mongoose = require('mongoose')
+const session = require('express-session')
+const MongoStore = require('connect-mongo')
 const authController = require("./controllers/auth.controller.js")
 
-
+// styles?
+app.use(express.static(__dirname));
+// styles
 
 // DATABASE CONNECTION
 
@@ -20,9 +24,18 @@ mongoose.connection.on('connected', () => {
 app.use(express.urlencoded({ extended: false }))
 app.use(methodOverride('_method'))
 app.use(morgan('dev'))
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGODB_URI
+    })
+
+}))
 
 app.get("/", async (req, res) => {
-  res.render("index.ejs", {title: 'The auth app'});
+  res.render("index.ejs", { title: 'The auth app', user: req.session.user });
 })
 
 
